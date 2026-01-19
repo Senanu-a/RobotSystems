@@ -3,7 +3,7 @@ from .basic import _Basic_class
 from .pwm import PWM
 from .pin import Pin
 from .filedb import fileDB
-
+User=None
 class Motor():
     """Motor"""
     PERIOD = 4095

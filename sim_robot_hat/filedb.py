@@ -34,7 +34,7 @@ class fileDB(object):
 		self.db = db
 		# Check if db_file is existed, otherwise create one
 		if self.db != None:	
-			self.file_check_create(db, mode, owner)
+			return
 		else:
 			raise ValueError('db: Missing file path parameter.')
 
@@ -72,6 +72,19 @@ class fileDB(object):
 				os.popen('sudo chmod %s %s'%(mode, file_path))
 			if owner != None:
 				os.popen('sudo chown -R %s:%s %s'%(owner, owner, dir))		
+		except PermissionError:
+			
+			file_path = os.path.expanduser(
+				"~/.picar-x/" + os.path.basename(file_path)
+			)
+			dir = file_path.rsplit('/',1)[0]
+
+			if not os.path.exists(dir):
+				os.makedirs(dir, mode=0o754)
+
+			with open(file_path, 'w') as f:
+				f.write("# robot-hat config and calibration value of robots\n\n")
+
 		except Exception as e:
 			raise(e) 
 	
@@ -86,6 +99,8 @@ class fileDB(object):
 		:return: the value of the arguement
 		:rtype: str
 		"""
+		return default_value
+
 		try:
 			conf = open(self.db,'r')
 			lines=conf.readlines()
@@ -103,11 +118,23 @@ class fileDB(object):
 			else:
 				return default_value
 		except FileNotFoundError:
-			conf = open(self.db,'w')
-			conf.write("")
-			conf.close()
-			return default_value
-		except :
+			
+			dir = self.db.rsplit('/', 1)[0]
+			try:
+				if not os.path.exists(dir):
+					os.makedirs(dir, mode=0o754)
+				conf = open(self.db, 'w')
+				conf.write("")
+				conf.close()
+			except PermissionError:
+				
+				self.db = os.path.expanduser("~/.picar-x/" + os.path.basename(self.db))
+				dir = self.db.rsplit('/', 1)[0]
+				if not os.path.exists(dir):
+					os.makedirs(dir, mode=0o754)
+				conf = open(self.db, 'w')
+				conf.write("")
+				conf.close()
 			return default_value
 	
 	def set(self, name, value):
@@ -120,6 +147,9 @@ class fileDB(object):
 		:type value: str
 		"""
 		# Read the file
+		pass
+		return
+
 		conf = open(self.db,'r')
 		lines=conf.readlines()
 		conf.close()

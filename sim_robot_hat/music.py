@@ -2,7 +2,10 @@
 from .basic import _Basic_class
 import time
 import threading
-import pyaudio
+try:
+    import pyaudio
+except ImportError:
+    pyaudio =None
 import os
 import struct
 import math
@@ -11,7 +14,7 @@ from .utils import enable_speaker, disable_speaker
 class Music(_Basic_class):
     """Play music, sound affect and note control"""
 
-    FORMAT = pyaudio.paInt16
+    FORMAT = pyaudio.paInt16 if pyaudio else None
     CHANNELS = 1
     RATE = 44100
 

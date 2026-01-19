@@ -1,7 +1,23 @@
 #!/usr/bin/env python3
 from .basic import _Basic_class
-import gpiozero  # https://gpiozero.readthedocs.io/en/latest/installing.html
-from gpiozero import OutputDevice, InputDevice, Button
+try:
+    import gpiozero  # https://gpiozero.readthedocs.io/en/latest/installing.html
+    from gpiozero import OutputDevice, InputDevice, Button
+except ImportError:
+    gpiozero = None
+    class OutputDevice:
+        def __init__(self, *args, **kwargs): pass
+        def on(self): pass
+        def off(self): pass
+        def close(self): pass
+
+    class InputDevice:
+        def __init__(self, *args, **kwargs):
+            self.value = 0
+        def close(self): pass
+
+    class Button(InputDevice):
+        pass
 
 
 class Pin(_Basic_class):

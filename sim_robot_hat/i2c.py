@@ -1,7 +1,23 @@
 #!/usr/bin/env python3
 from .basic import _Basic_class
+#try:
+
+ #   from .basic import _Basic_class
+#except ImportError:
+ #   basic =None
+#try:
 from .utils import run_command
-from smbus2 import SMBus
+#except ImportError:
+    #utils =None
+try:
+    from smbus2 import SMBus
+except ImportError:
+    smbus2 = None
+    class SMBus:
+        def __init__(self, *args, **kwargs): pass
+        def write_word_data(self,addr,reg,data):pass
+        def close(self):pass
+
 import multiprocessing
 
 
