@@ -2,7 +2,7 @@ import time
 from picarx_improved import Picarx
 
 px = Picarx()
-
+px.set_dir_servo_angle(0)
 def fwd_back_turn():
     # move forward at a speed of 100 for 3s
     px.forward(100)
@@ -74,7 +74,7 @@ def three_point_turn():
     #final turn(forward +turn)
     px.set_dir_servo_angle(-30)
     px.forward(40)
-    time.sleep(1)
+    time.sleep(2)
 
     #straighten tires and proceed
     px.set_dir_servo_angle(0)

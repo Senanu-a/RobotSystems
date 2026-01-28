@@ -16,6 +16,7 @@ except ImportError:
     class SMBus:
         def __init__(self, *args, **kwargs): pass
         def write_word_data(self,addr,reg,data):pass
+        def read_byte(self,addr):pass
         def close(self):pass
 
 import multiprocessing
@@ -100,9 +101,11 @@ class I2C(_Basic_class):
     def _read_byte(self):
         # with I2C.i2c_lock.get_lock():
         result = self._smbus.read_byte(self.address)
+        if result is None:
+            result = 0  # default dummy byte
+
         self._debug(f"_read_byte: [0x{result:02X}]")
         return result
-
     @_retry_wrapper
     def _read_byte_data(self, reg):
         # with I2C.i2c_lock.get_lock():
