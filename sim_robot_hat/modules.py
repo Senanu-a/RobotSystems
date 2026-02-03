@@ -263,7 +263,7 @@ class Grayscale_Module(object):
     """Middle Channel"""
     RIGHT = 2
     """Right Channel"""
-
+ 
     REFERENCE_DEFAULT = [1000]*3
 
     def __init__(self, pin0: ADC, pin1: ADC, pin2: ADC, reference: int = None):

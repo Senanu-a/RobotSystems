@@ -4,7 +4,7 @@ from picarx_improved import Picarx
 
 px = Picarx()
 
-px_power = 10
+px_power = 20
 offset = 20          # steering angle for left/right
 last_state = "stop"
 

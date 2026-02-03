@@ -40,7 +40,7 @@ class Picarx(object):
     DIR_MAX = 30
     CAM_PAN_MIN = -90
     CAM_PAN_MAX = 90
-    CAM_TILT_MIN = -35
+    CAM_TILT_MIN = -50
     CAM_TILT_MAX = 65
 
     PERIOD = 4095
@@ -349,8 +349,8 @@ class Picarx(object):
 """
 if __name__ == "__main__":
     px = Picarx()
-    px.forward(50)
+    px.set_cam_tilt_angle(-65) #keep camera downs
     time.sleep(1)
     px.stop()
 
-    """  
+   # """

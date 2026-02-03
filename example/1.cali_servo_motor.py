@@ -14,7 +14,7 @@ manual = '''
     [5]: right motor                [E]: motors run/stop
 
     [SPACE]: confirm calibration                [Crtl+C]: quit
-                                      
+                                      rr
 '''    
 
 px = Picarx()

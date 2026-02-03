@@ -3,6 +3,7 @@ from time import sleep
 from picarx_improved import Picarx
 from robot_hat.adc import ADC   # adjust import if your package path differs
 
+last_offset = 0.0
 
 class GrayscaleSensor:
     """
@@ -116,7 +117,7 @@ class SteeringController:
         return angle
 
 
-def run_line_follow(px_power=10, dt=0.03, sensitivity=120, polarity="dark",
+def run_line_follow(px_power=15, dt=0.03, sensitivity=120, polarity="dark",
                     steer_scale=25.0, max_angle=30.0, forward=True):
     """
     3.4 Sensor-control integration
@@ -127,21 +128,31 @@ def run_line_follow(px_power=10, dt=0.03, sensitivity=120, polarity="dark",
     sensor = GrayscaleSensor("A0", "A1", "A2")
     interpreter = GrayscaleInterpreter(sensitivity=sensitivity, polarity=polarity, auto_baseline=True)
     controller = SteeringController(px, steer_scale=steer_scale, max_angle=max_angle)
+    last_offset = 0.0
+    angle = 0.0
 
     try:
         while True:
             vals = sensor.read()                 # [L,M,R]
-            offset = interpreter.process(vals)   # [-1,1]
-            angle = controller.control(offset)   # degrees
-
-            if forward:
+            offset = interpreter.process(vals)
+            # detect "line lost"
+       	    if abs(offset) < 0.05:
+                # recover: turn toward last known direction
+                recover_angle = 30 if last_offset > 0 else -30
+                px.set_dir_servo_angle(recover_angle)
+                px.backward(px_power)
+            else:
+                angle = controller.control(offset)
                 px.forward(px_power)
+                last_offset = offset
 
             print(f"vals={vals}  offset={offset:+.2f}  angle={angle:+.1f}")
             sleep(dt)
 
     except KeyboardInterrupt:
         print("\nStopping...")
+
+
 
     finally:
         px.stop()
@@ -151,7 +162,8 @@ def run_line_follow(px_power=10, dt=0.03, sensitivity=120, polarity="dark",
 
 if __name__ == "__main__":
     # Start here, then tune:
-    run_line_follow(px_power=10, dt=0.03,
+    run_line_follow(px_power=29, dt=0.03,
                     sensitivity=120, polarity="dark",
                     steer_scale=25, max_angle=30,
                     forward=True)
+

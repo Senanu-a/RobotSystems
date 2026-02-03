@@ -22,13 +22,13 @@ import cv2
 import numpy as np
 
 from picamera2 import Picamera2
-from picarx import Picarx
+from picarx_improved import Picarx
 
 
 # ======== USER TUNABLES ========
-SHOW_WINDOW = True       # Set False if you don't have a display (SSH without VNC/X11)
+SHOW_WINDOW = False       # Set False if you don't have a display (SSH without VNC/X11)
 POLARITY = "dark"        # "dark" (dark line on light floor) or "light" (light line on dark floor)
-POWER = 10               # forward speed
+POWER = 20               # forward speed
 DT = 0.03                # loop delay seconds
 STEER_SCALE = 25.0       # degrees per unit offset
 MAX_ANGLE = 30.0         # clamp steering degrees
